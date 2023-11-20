@@ -225,7 +225,34 @@ bomb_y_henry = 70
 bomb_stopped_henry = False
 # -----------------------------------
 
+background_color_lucas = (0, 31, 63)  # Light blue color
+snowflakes_lucas = []
 
+lucas_x_value = 640 * 2
+lucas_y_value = 480 * 4
+
+christmas_tree_1_lucas = [
+    (lucas_x_value + 300, lucas_y_value + 150), 
+    (lucas_x_value + 260, lucas_y_value + 250), 
+    (lucas_x_value + 340, lucas_y_value + 250),
+]
+
+christmas_tree_2_lucas = [
+    (lucas_x_value + 300, lucas_y_value + 200), 
+    (lucas_x_value + 250, lucas_y_value + 320), 
+    (lucas_x_value + 350, lucas_y_value + 320),
+]
+
+christmas_tree_trunk_lucas = [
+    (lucas_x_value + 282, lucas_y_value + 315),
+    (lucas_x_value + 278, lucas_y_value + 400),
+    (lucas_x_value + 319, lucas_y_value + 400),
+    (lucas_x_value + 319, lucas_y_value + 315),
+    
+]
+
+bauble_colors_lucas = [(255, 0, 0), (0, 0, 255), (255, 215, 0), (0, 128, 0), (255, 165, 0)] 
+bauble_positions_lucas = [(lucas_x_value + 287, lucas_y_value +  223), (lucas_x_value + 307, lucas_y_value +  206), (lucas_x_value + 299, lucas_y_value + 248), (lucas_x_value + 274, lucas_y_value + 298), (lucas_x_value + 316, lucas_y_value + 298)]
 
 running = True
 while running:
@@ -1003,6 +1030,70 @@ while running:
             curd[1] = random.randint(-100, -10)
             curd[0] = random.randint(x + 155, x + 449)
     # ----------------------------------------------------------------------------------------
+
+    x = 640 * 2
+    y = 480 * 4
+    WIDTH = 640
+    HEIGHT = 480
+
+    pygame.draw.rect(screen, (background_color_lucas), (lucas_x_value, lucas_y_value, WIDTH, HEIGHT))
+
+    # Draw ground
+    pygame.draw.rect(screen, (255, 255, 255), (lucas_x_value, lucas_y_value + 400, WIDTH, 80), 0)  # Grass
+
+    # Draw wooden cabin
+    pygame.draw.rect(screen, (139, 69, 19), (lucas_x_value + 100, lucas_y_value + 300, 140, 120), 0)  # Wooden cabin (Filled)
+    pygame.draw.rect(screen, (72, 39, 8), (lucas_x_value + 100, lucas_y_value + 300, 140, 120), 3)  # Outline with darker brown
+    pygame.draw.polygon(screen, (139, 69, 19), [(lucas_x_value + 100, lucas_y_value + 300), (lucas_x_value + 170, lucas_y_value + 220), (lucas_x_value + 240, lucas_y_value + 300)], 0)  # Roof (Filled)
+    pygame.draw.polygon(screen, (72, 39, 8), [(lucas_x_value + 100, lucas_y_value + 300), (lucas_x_value + 170, lucas_y_value + 220), (lucas_x_value + 240, lucas_y_value + 300)], 3)  # Outline with darker brown
+    pygame.draw.rect(screen, (165, 42, 42), (lucas_x_value + 130, lucas_y_value + 360, 40, 60), 0)  # Door (Filled)
+    pygame.draw.rect(screen, (72, 39, 8), (lucas_x_value + 130, lucas_y_value + 360, 40, 60), 3)  # Outline with darker brown
+
+    # Draw glowing windows
+    window_color = (255, 255, 0)  # Yellow color
+    window_glow_color = (255, 255, 100, 50) 
+
+    pygame.draw.rect(screen, window_glow_color, (lucas_x_value + 110, lucas_y_value + 330, 20, 20), 0)
+    pygame.draw.rect(screen, window_color, (lucas_x_value + 110, lucas_y_value + 330, 20, 20), 0)
+
+    pygame.draw.rect(screen, window_glow_color, (lucas_x_value + 150, lucas_y_value + 330, 20, 20), 0)
+    pygame.draw.rect(screen, window_color, (lucas_x_value + 150, lucas_y_value + 330, 20, 20), 0)
+
+    pygame.draw.rect(screen, window_glow_color, (lucas_x_value + 190, lucas_y_value + 330, 20, 20), 0)
+    pygame.draw.rect(screen, window_color, (lucas_x_value + 190, lucas_y_value + 330, 20, 20), 0)
+
+    # Draw Christmas tree
+    pygame.draw.polygon(screen, (0, 128, 0), christmas_tree_1_lucas, 0)  # Tree (Filled)
+    pygame.draw.polygon(screen, (0, 128, 0), christmas_tree_2_lucas, 0)  # Tree (Filled)
+    pygame.draw.polygon(screen, (87, 28, 3), christmas_tree_trunk_lucas, 0)  # Tree Base (Filled)
+
+# Draw baubles on the tree
+    for pos in bauble_positions_lucas:
+        pygame.draw.circle(screen, random.choice(bauble_colors_lucas), pos, random.randint(5, 10))
+
+    # Snowfall logic
+    for snowflake in snowflakes_lucas:
+        snowflake['rect'].y += snowflake['speed']
+        if snowflake['rect'].y > lucas_y_value + HEIGHT:
+            snowflake['rect'].y = random.randrange(lucas_y_value - 30, lucas_y_value - 10)
+            snowflake['rect'].x = random.randrange(lucas_x_value, lucas_x_value + WIDTH)
+
+# Add new snowflakes
+    if random.random() < 0.1:  # Adjust the probability to control snowflake spawn rate
+        snowflake = {
+            'rect': pygame.Rect(random.randrange(lucas_x_value, lucas_x_value + WIDTH), random.randrange(lucas_y_value - 30, lucas_y_value - 10), 10, 10),
+            'speed': random.randint(1, 5)
+        }
+        snowflakes_lucas.append(snowflake)
+
+# Draw snowflakes
+    for snowflake in snowflakes_lucas:
+        pygame.draw.rect(screen, (255, 255, 255), snowflake['rect'])
+
+
+    # ----------------------------------------------------------------------------------------
+
+    
     x = 1920
     y = 1440
     width = 640
